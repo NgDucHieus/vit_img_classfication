@@ -27,6 +27,8 @@ class FormAdder(QDialog):
 
         # Kết nối sự kiện
         self.btn_add.clicked.connect(self.open_adder)
+        self.btn_save.clicked.connect(self.save_data)
+        self.btn_cancel.clicked.connect(self.close)
 
     def open_adder(self):
         dialog = AdderDialog(self)
@@ -38,6 +40,22 @@ class FormAdder(QDialog):
                 self.table.setItem(row, 0, QTableWidgetItem(label))
                 self.table.setItem(row, 1, QTableWidgetItem(source))
 
+    def data_to_dict(self):
+        data = {}
+        for row in range(self.table.rowCount()):
+            label = self.table.item(row, 0).text()
+            source = self.table.item(row, 1).text()
+            data[label] = source
+        return data
+    def save_data(self):
+        data = self.data_to_dict()
+        print(data)
+        # Lưu dữ liệu to labels.txt in the same folder
+        with open("labels.txt", "w") as file:
+            for label, source in data.items():
+                file.write(f"{label} {source}\n")
+        self.close()
+        
 if __name__ == "__main__":
     app = QApplication([])
     window = FormAdder()
